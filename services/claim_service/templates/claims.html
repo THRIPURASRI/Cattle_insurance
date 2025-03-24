@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Submitted Claims</h2>
+
+<a href="{{ url_for('claim_routes.submit_claim') }}?user_id={{ user_id }}" class="btn btn-success mb-3">
+    ➕ Submit New Claim
+</a>
+
+{% if claims %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Policy ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for claim in claims %}
+        <tr>
+            <td>{{ claim.id }}</td>
+            <td>{{ claim.policy_id }}</td>
+            <td>{{ claim.description }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if claim.status == 'Approved' else 'danger' if claim.status == 'Rejected' else 'warning' }}">
+                    {{ claim.status }}
+                </span>
+            </td>
+            <td>{{ claim.submitted_on.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No claims submitted yet.</p>
+{% endif %}
+{% endblock %}

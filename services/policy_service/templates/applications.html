@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4 text-primary">Policy Applications</h2>
+
+{% if applications %}
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Application ID</th>
+            <th>User ID</th>
+            <th>Policy ID</th>
+            <th>Status</th>
+            <th>Applied On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.id }}</td>
+            <td>{{ app.user_id }}</td>
+            <td>{{ app.policy_id }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if app.status == 'Approved' else 'danger' if app.status == 'Rejected' else 'warning' }}">
+                    {{ app.status }}
+                </span>
+            </td>
+            <td>{{ app.applied_on.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                <button class="btn btn-sm btn-success me-1" onclick="updateStatus({{ app.id }}, 'Approved')">Approve</button>
+                <button class="btn btn-sm btn-danger" onclick="updateStatus({{ app.id }}, 'Rejected')">Reject</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No applications found.</p>
+{% endif %}
+
+<script>
+function updateStatus(applicationId, newStatus) {
+    const userId = {{ user_id | tojson }};
+    fetch(`/update_status/${applicationId}/${newStatus}?user_id=${userId}`)
+        .then(response => {
+            if (response.ok) {
+                location.reload();  // reload the table to reflect status
+            } else {
+                alert("Failed to update status");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error occurred while updating status.");
+        });
+}
+</script>
+{% endblock %}

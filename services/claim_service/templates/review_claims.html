@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4 text-primary">Review Claims</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Claim ID</th>
+            <th>User ID</th>
+            <th>Policy ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for claim in claims %}
+        <tr>
+            <td>{{ claim.id }}</td>
+            <td>{{ claim.user_id }}</td>
+            <td>{{ claim.policy_id }}</td>
+            <td>{{ claim.description }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if claim.status == 'Approved' else 'danger' if claim.status == 'Rejected' else 'warning' }}">
+                    {{ claim.status }}
+                </span>
+            </td>
+            <td>{{ claim.submitted_on.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                <button class="btn btn-success btn-sm" onclick="updateClaimStatus({{ claim.id }}, 'Approved')">Approve</button>
+                <button class="btn btn-danger btn-sm" onclick="updateClaimStatus({{ claim.id }}, 'Rejected')">Reject</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function updateClaimStatus(claimId, newStatus) {
+    const userId = {{ user_id | tojson }};
+    fetch(`/update_claim_status/${claimId}/${newStatus}?user_id=${userId}`)
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert("Failed to update claim status.");
+            }
+        });
+}
+</script>
+{% endblock %}

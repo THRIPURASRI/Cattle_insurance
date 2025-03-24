@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Available Policies</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Policy Name</th>
+            <th>Breed</th>
+            <th>Age Limit</th>
+            <th>Premium (₹)</th>
+            <th>Duration (Months)</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for policy in policies %}
+        <tr>
+            <td>{{ policy.name }}</td>
+            <td>{{ policy.cattle_breed }}</td>
+            <td>{{ policy.age_limit }}</td>
+            <td>{{ policy.premium }}</td>
+            <td>{{ policy.duration_months }}</td>
+            <td>
+                {% if policy.id in user_policy_ids %}
+                    <span class="badge bg-success">Applied</span>
+                {% else %}
+                    <form method="POST" action="{{ url_for('policy_routes.apply_policy', policy_id=policy.id) }}?user_id={{ user_id }}">
+                        <button class="btn btn-sm btn-primary">Apply</button>
+                    </form>
+                    <a href="{{ url_for('policy_routes.add_policy') }}?user_id={{ user_id }}" class="btn btn-success mb-3">
+                        Add New Policy
+                    </a>
+                      
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

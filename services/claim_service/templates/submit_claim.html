@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Submit a New Claim</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.policy_id.label }}{{ form.policy_id(class_='form-control') }}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label }}{{ form.description(class_='form-control', rows=4) }}
+    </div>
+    <button class="btn btn-danger">{{ form.submit.label }}</button>
+</form>
+{% endblock %}

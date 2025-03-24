@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow p-4">
+    <h2 class="mb-3">Welcome, {{ name }}! 👋</h2>
+    <p class="mb-4">You are logged in. This is your dashboard.</p>
+
+    <div class="d-grid gap-3">
+        <a href="http://localhost:5002/policies?user_id={{ current_user.id }}" class="btn btn-primary">
+            📋 View Insurance Policies
+        </a>
+    
+        <a href="http://localhost:5002/add_policy?user_id={{ current_user.id }}" class="btn btn-success">
+            ➕ Add New Policy
+        </a>
+    
+        <a href="http://localhost:5003/claims?user_id={{ current_user.id }}" class="btn btn-warning">
+            📁 View Claims
+        </a>
+    
+        <a href="http://localhost:5003/submit_claim?user_id={{ current_user.id }}" class="btn btn-danger">
+            📝 Submit New Claim
+        </a>
+
+        {% if current_user.role == 'admin' %}
+            <a href="http://localhost:5002/applications?user_id={{ current_user.id }}" class="btn btn-secondary">
+             🛠️ Review Policy Applications
+           </a>
+       {% endif %}
+       {% if current_user.role == 'admin' %}
+            <a href="http://localhost:5003/review_claims?user_id={{ current_user.id }}" class="btn btn-dark mt-3">
+             📝 Review Claims
+           </a>
+       {% endif %}
+
+        
+    </div>
+    
+</div>
+{% endblock %}
